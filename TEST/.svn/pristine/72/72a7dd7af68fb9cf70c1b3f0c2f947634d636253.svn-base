@@ -1,0 +1,210 @@
+/**
+ * Created by Lemon on 2016/4/13.
+ */
+var DailyReportForm=React.createClass({
+render:function(){
+    var tds=[];
+    for(var i=0;i<3;i++){
+        tds.push(
+            <tr>
+                <td colSpan="2">10MC0511141</td>
+                <td colSpan="2">N-801-000-000-000-000</td>
+                <td colSpan="2"></td>
+                <td colSpan="2">150</td>
+                <td colSpan="2">150</td>
+                <td colSpan="2">踩线-包装</td>
+                <td colSpan="2">07:30</td>
+                <td colSpan="2">17:30</td>
+                <td colSpan="2">4</td>
+                <td colSpan="2">30.0</td>
+                <td colSpan="2">150</td>
+                <td colSpan="2">150</td>
+                <td colSpan="2" style={{color:'red'}}>0</td>
+                <td colSpan="2" style={{color:'red'}}>0.0%</td>
+                <td colSpan="2">548.0</td>
+                <td colSpan="2">25.0</td>
+                <td colSpan="2">30.0</td>
+                <td colSpan="2">30.0</td>
+                <td colSpan="2">150</td>
+                <td colSpan="2">150</td>
+                <td colSpan="2">80%</td>
+            </tr>
+        );
+        var errorLostTime=[];
+        for(var a=0;a<4;a++){
+            errorLostTime.push(
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            );
+        }
+        var noUseLostTime=[];
+        for(var b=0;b<3;b++){
+            noUseLostTime.push(
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            );
+        }
+    }
+    return(
+        <div className="grid">
+            <label>单位：制一课</label><label style={{float:'right'}}>生产日期：2016年4月13日</label>
+            <table className="table hovered cell-hovered border bordered">
+                <thead>
+                <tr>
+                    <th rowSpan="2" colSpan="2">工令单号</th>
+                    <th rowSpan="2" colSpan="2">成品料号</th>
+                    <th rowSpan="2" colSpan="2">品名规格</th>
+                    <th rowSpan="2" colSpan="2">批量<br/>（pcs）</th>
+                    <th rowSpan="2" colSpan="2">当日排程量</th>
+                    <th rowSpan="2" colSpan="2">作业内容</th>
+                    <th colSpan="4">作业时间</th>
+                    <th rowSpan="2" colSpan="2">投入人力</th>
+                    <th colSpan="2">（F）</th>
+                    <th colSpan="8"style={{textAlign:'center'}}>产品状况</th>
+                    <th rowSpan="2" colSpan="2">标准工时(ces/psc)</th>
+                    <th colSpan="2">(E)</th>
+                    <th colSpan="2">日期</th>
+                    <th rowSpan="2" colSpan="2">累计生产工时(h)</th>
+                    <th rowSpan="2" colSpan="2">累计生产数量(pcs)</th>
+                    <th rowSpan="2" colSpan="2">累计入库量(pcs)</th>
+                    <th rowSpan="2" colSpan="2">生产效率(%)</th>
+                </tr>
+                <tr>
+                    <th colSpan="2">起</th>
+                    <th colSpan="2">止</th>
+                    <th colSpan="2">投入工时（h）</th>
+                    <th colSpan="2">良品数（pcs）</th>
+                    <th colSpan="2">当日入库量（pcs）</th>
+                    <th colSpan="2">不良数（pcs）</th>
+                    <th colSpan="2">不良率(%)</th>
+                    <th colSpan="2">产出工时(h)</th>
+                    <th colSpan="2">实际工时(h)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {tds}
+                <tr>
+                    <td colSpan="2">实际工时：A</td>
+                    <td style={{textAlign:'right'}} colSpan="2">150</td>
+                    <td colSpan="4"></td>
+                    <td colSpan="2"></td>
+                    <td colSpan="2"></td>
+                    <td colSpan="16" style={{textAlign:'right',fontWeight:'bold'}}>组平均效率：(E)</td>
+                    <td colSpan="4">#REF!</td>
+                    <td colSpan="2">÷(D)</td>
+                    <td colSpan="2">=</td>
+                    <td colSpan="2">#REF!</td>
+                    <td colSpan="4">#REF!</td>
+                </tr>
+                <tr>
+                    <td colSpan="28" style={{textAlign:'right',fontWeight:'bold'}}>生产总效率:(E)</td>
+                    <td colSpan="4">#REF!</td>
+                    <td colSpan="2">÷(A)</td>
+                    <td colSpan="2">=</td>
+                    <td colSpan="2">#REF!</td>
+                    <td colSpan="4">#REF!</td>
+                </tr>
+                <tr>
+                    <td colSpan="12" style={{textAlign:'center'}}>出勤状况</td>
+                    <td colSpan="10" style={{textAlign:'center'}}>损失工时</td>
+                    <td colSpan="20" rowSpan="12">需要计算的rowSpan</td>
+                </tr>
+                <tr>
+                    <td colSpan="3">项目</td>
+                    <td colSpan="3">上午</td>
+                    <td colSpan="3">下午</td>
+                    <td colSpan="3">晚上</td>
+                    <td colSpan="3">代号/序号</td>
+                    <td colSpan="4">异常损失工时(h)</td>
+                    <td colSpan="3">签核</td>
+                </tr>
+                <tr>
+                    <td colSpan="3">应到人数</td>
+                    <td colSpan="3">20</td>
+                    <td colSpan="3">20</td>
+                    <td colSpan="3"></td>
+                    <td colSpan="10" rowSpan="2">
+                        <table  className="table hovered cell-hovered border bordered">
+                            {errorLostTime}
+                    </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colSpan="3">请假人数</td>
+                    <td colSpan="3">1</td>
+                    <td colSpan="3">1</td>
+                    <td colSpan="3"></td>
+                </tr>
+                <tr>
+                    <td colSpan="3">矿工人数/自离</td>
+                    <td colSpan="3"></td>
+                    <td colSpan="3"></td>
+                    <td colSpan="3"></td>
+                    <td colSpan="7">合计：异常损失工时(B)</td>
+                    <td colSpan="3">0.0</td>
+                </tr>
+                <tr>
+                    <td colSpan="3">借人人数/时</td>
+                    <td colSpan="3">1</td>
+                    <td colSpan="3">1</td>
+                    <td colSpan="3"></td>
+                    <td colSpan="10" rowSpan="3">
+                        <table  className="table hovered cell-hovered border bordered">
+                            {noUseLostTime}
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colSpan="3">借出人数/时</td>
+                    <td colSpan="3"></td>
+                    <td colSpan="3">0</td>
+                    <td colSpan="3"></td>
+                </tr>
+                <tr>
+                    <td colSpan="3">实到人数</td>
+                    <td colSpan="3">20</td>
+                    <td colSpan="3">20</td>
+                    <td colSpan="3"></td>
+                </tr>
+                <tr>
+                    <td colSpan="6" style={{textAlign:'center',fontWeight:'bold'}}>合计：投入总工时(A)</td>
+                    <td colSpan="6">150.0</td>
+                    <td colSpan="7" style={{textAlign:'center',fontWeight:'bold'}}>合计：无效工时(C)</td>
+                    <td colSpan="3">7.5</td>
+                </tr>
+                <tr>
+                    <td colSpan="3">异常损失工时(B)</td>
+                    <td colSpan="19">1、机故；2、模故；3、重工；4、特采；5、A混料/B发错料；6、A停水/B停电/C停气；7、待料：A待前段制程之成品，B待采聘的材料，C来料不良，D带包装材料</td>
+                </tr>
+                <tr>
+                    <td colSpan="3" rowSpan="2">无效工时(C)</td>
+                    <td colSpan="19">1、换线；2、教育训练。。。。。。</td>
+                </tr>
+                <tr>
+                    <td colSpan="3">组长：</td>
+                    <td colSpan="2">0.0</td>
+                    <td colSpan="1">+</td>
+                    <td colSpan="2">班导</td>
+                    <td colSpan="3">0.0</td>
+                    <td colSpan="3">+其他(入库员)</td>
+                    <td colSpan="2">0.0</td>
+                    <td colSpan="1">=</td>
+                    <td colSpan="2">0.0</td>
+                </tr>
+                </tbody>
+            </table>
+            <label style={{width:'25%'}}>核准：</label>
+            <label style={{width:'25%'}}>正：</label>
+            <label style={{width:'25%'}}>审核：</label>
+            <label style={{width:'25%'}}>制表：</label>
+            <FooterForm></FooterForm>
+        </div>
+        );
+    }
+});

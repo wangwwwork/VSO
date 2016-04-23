@@ -1,0 +1,187 @@
+/*
+ 投入工时统计界面*/
+var InHoursForm = React.createClass({
+    getInitialState: function () {
+        var inIterms = Immutable.fromJS(
+            [
+                {id: 0, name: '工作小时', morning: '', afternoon: '', night: ''},
+                {id: 1, name: '应到人数', morning: '', afternoon: '', night: ''},
+                {id: 2, name: '请假人数', morning: '', afternoon: '', night: ''},
+                {id: 3, name: '旷工人数', morning: '', afternoon: '', night: ''},
+                {id: 4, name: '借入人数', morning: '', afternoon: '', night: ''},
+                {id: 5, name: '借出人数', morning: '', afternoon: '', night: ''},
+                {id: 6, name: '实到人数', morning: '', afternoon: '', night: ''}
+
+            ]);
+        return {inIterms, InputtotalTime: ''};
+    },
+
+    calcPeopleValue: function (id, time, value) {
+        var sumVar = {};
+        if (value == '' || id == 1)
+            return "";
+        for (var i = 1; i < 6; i++){
+            if (this.state.inIterms.get(i).get(time) !== '' || id === i){
+                if(id === i)
+                    sumVar[i-1] = parseInt(value) ;
+                else {
+                    sumVar[i-1] = parseInt(this.state.inIterms.get(i).get(time));
+                }
+            }
+            else{
+                return "";
+            }
+         }
+        sumVar[5] = sumVar[0] + sumVar[3] -sumVar[1] -sumVar[2] - sumVar[4];//计算总人数
+        return sumVar[5] < 0? "人数输入有误" : sumVar[5];
+    },
+
+    calcTimeValue: function (id, time, value) {
+        if (value == '' || id != 0)
+            return "";
+        var timeString = ['morning', 'afternoon', 'night'];
+        var sum = 0;
+        for (var i = 0; i < timeString.length; i++){
+            if (this.state.inIterms.get(i).get(timeString[i]) !== '' || time === timeString[i]) {
+                if (time == timeString[i]) {
+                    sum += parseInt(value);
+                }
+                else {
+                    sum += parseInt(this.state.inIterms.get(0).get(timeString[i]));
+                }
+            }
+            else{
+                return "";
+            }
+        }
+        return sum;
+    },
+    
+    calcInputTotalTime: function (allDayTime, partTimePeopleNumber, time) {
+        if (allDayTime == ''){
+            return "";
+        }
+        if (!partTimePeopleNumber.match('/^[0-9]+.?[0-9]*$/')){
+            return "";
+        }
+        var timeString = ['morning', 'afternoon', 'night'];
+        var sum = 0;
+        for (var i = 0; i < timeString.length; i++){
+            if (this.state.inIterms.get(i).get(timeString[i]) !== '' || time === timeString[i]) {
+                if (time == timeString[i]) {
+                    sum += parseInt(value);
+                }
+                else {
+                    sum += parseInt(this.state.inIterms.get(0).get(timeString[i]));
+                }
+            }
+            else{
+                return "";
+            }
+        }
+        return allDayTime * sum;
+    },
+
+    handleChange: function (time, id, event) {
+        var sum = this.calcPeopleValue(id, time, event.target.value.trim(''));
+        var tVector = this.state.inIterms.toArray();
+        var testState = this.state.inIterms.map(function (child) {
+            if (child.get('id') == id){
+                return child.set(time, event.target.value);
+            }
+            else if ((child.get("id") === 6) ){
+                return child.set(time, sum);
+            }
+            return child;
+        })
+        this.setState({inIterms: testState});
+    },
+
+    render: function () {
+        var rows = [];
+        for(var i = 0;i<this.state.inIterms.size;i++){
+            var row = this.state.inIterms.get(i);
+            if (i ==0){
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td><div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                        'morning',row.get('id'))}"*/ data-keys="1,2,3,4,5,6,7,8,9,0,." >
+                            <input type="text"   valueAsDate ={row.get("morning")}/></div></td>
+                        <td><div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                        'afternoon',row.get('id'))}"*/ data-keys="1,2,3,4,5,6,7,8,9,0,.">
+                            <input type="text" defaultValue={row.get("afternoon")}/></div></td>
+                        <td>
+                            <div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                                'night',row.get('id'))}"*/ data-keys="1,2,3,4,5,6,7,8,9,0,.">
+                                <input type="text"  defaultValue={row.get("night")}/></div></td>
+                    </tr>);
+            }
+            if (i !== 6){
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td><div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                        'morning',row.get('id'))}" */>
+                            <input type="text"   valueAsDate ={row.get("morning")}/></div></td>
+                        <td><div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                        'afternoon',row.get('id'))}"*/ >
+                            <input type="text" defaultValue={row.get("afternoon")}/></div></td>
+                        <td><div className="input-control text" data-role="keypad" /*data-on-change="{this.handleChange.bind(this,
+                                'night',row.get('id'))}"*/><input type="text" defaultValue={row.get("night")}/></div></td>
+                    </tr>);
+            }
+            else{
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td> <lable htmlFor="mapBug">{row.get('morning')}</lable></td>
+                        <td><lable htmlFor="mapBug">{row.get('afternoon')}</lable></td>
+                        <td><lable htmlFor="mapBug">{row.get('night')}</lable></td>
+                    </tr>);
+            }
+
+        }
+        return (<div className="grid">
+            <div className="row cells10">
+                <div className="cell colspan1">
+                    <label htmlFor="mapBug"><h4>课组别:</h4></label>
+                </div>
+                <div className="input-control text cell colspan2"
+                     data-role="input">
+                    <input id="mapBug" type="text" />
+                    <button className="button helper-button clear">
+                        <span className="mif-cross"></span></button>
+                </div>
+
+                <div className="cell colspan1">
+                    <label htmlFor="inputTime"><h4>投入总工时:</h4></label>
+                </div>
+                <div className="input-control text cell colspan3"
+                     data-role="input">
+                    <label htmlFor="mapBug" id="inputTotalTime">{this.state.InputtotalTime}</label>
+
+                </div>
+            </div>
+
+
+            <table className="table striped hovered cell-hovered border bordered"
+                   id="main_table_demo">
+                <thead>
+                <tr>
+                    <th>出勤</th>
+                    <th>上午</th>
+                    <th>下午</th>
+                    <th>晚上</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rows}
+                </tbody>
+            </table>
+
+
+            <FooterForm></FooterForm>
+        </div>);
+    }
+});

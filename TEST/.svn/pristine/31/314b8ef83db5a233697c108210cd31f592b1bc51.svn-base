@@ -1,0 +1,249 @@
+/*
+ 投入工时统计界面*/
+
+var InHoursForm = React.createClass({
+    mixins: [React.addons.PureRenderMixin],
+    getInitialState: function () {
+        var inIterms = Immutable.fromJS(
+            [
+                {id: 0, name: '工作小时', morning: '', afternoon: '', night: ''},
+                {id: 1, name: '应到人数', morning: '', afternoon: '', night: ''},
+                {id: 2, name: '请假人数', morning: '', afternoon: '', night: ''},
+                {id: 3, name: '旷工人数', morning: '', afternoon: '', night: ''},
+                {id: 4, name: '借入人数', morning: '', afternoon: '', night: ''},
+                {id: 5, name: '借出人数', morning: '', afternoon: '', night: ''},
+                {id: 6, name: '实到人数', morning: '', afternoon: '', night: ''}
+
+            ]);
+        return { pageInputState: '',pageInputStateDescripe:'', inIterms, inputTotalTime: '',classId: '',commitState: '' };
+    },
+
+
+    componentDidMount: function () {
+        KepPadOnChange = function(obj, id) {
+            var test = "<div className='input-control text' data-role='keypad' data-on-change='KepPadOnChange('morinig','" + id + "')'"  + "data-keys='1,2,3,4,5,6,7,8,9,0,.' >";
+            alert(test);
+            alert(id);
+        }
+    },
+
+    /*
+    获得文本框鼠标点所在列的总人数
+    id:某一行的id号
+    time：morning, afternoon, night
+    value:输入文本框的值
+     */
+    calcPeopleValue: function (id, time, value) {
+        var sumVar = {};
+        if ((this.state.inIterms.get(6).get(time) !== '')&&(id == 0))
+            return this.state.inIterms.get(6).get(time);
+        if (value == '')
+            return "";
+        for (var i = 1; i < 6; i++){
+            if (this.state.inIterms.get(i).get(time) !== '' || id === i){
+                if(id === i )
+                    sumVar[i-1] = parseInt(value) ;
+                else {
+                    sumVar[i-1] = parseInt(this.state.inIterms.get(i).get(time));
+                }
+            }
+            else{
+                return "";
+            }
+         }
+        sumVar[5] = sumVar[0] + sumVar[3] -sumVar[1] -sumVar[2] - sumVar[4];//计算总人数
+        return sumVar[5] < 0? "人数输入有误" : sumVar[5];
+    },
+
+    calcTimeValue: function (id, time, value) {
+        if (value == '')
+            return "";
+        if (id == 0)
+            return value;
+        return this.state.inIterms.get(0).get(time);
+    },
+
+    calcInputTotalTime: function (time, columnPeople, columnTime) {
+        if (columnTime == '' || (columnPeople.toString() == '')){
+            return "";
+        }
+        var reg = /^[0-9]*$/;
+        if (!reg.test(columnPeople)){
+            return "人数输入有误";
+        }
+        var timeString = ['morning', 'afternoon', 'night'];
+        var sum = 0;
+        for (var i = 0; i < timeString.length; i++) {
+            var partTime = this.state.inIterms.get(0).get(timeString[i]);
+            var partNumber = this.state.inIterms.get(6).get(timeString[i]);
+            if (((partTime != '') && (partNumber != '')) || time === timeString[i]) {
+                if (time == timeString[i]) {
+                    sum += parseInt(columnPeople) * parseFloat(columnTime);
+                }
+                else {
+                    sum += parseFloat(partTime) * parseInt(partNumber);
+                }
+            }
+            else {
+                return "";
+            }
+        }
+        return sum;
+
+    },
+
+    judgeTheTimeValue(id, time, value){
+        if (id != 0)
+            return '';
+        var workTime;
+        switch (time){
+            case "morning":
+                workTime = 12;
+                break;
+            case "afternoon":
+                workTime = 6;
+                break;
+            case "night":
+                workTime = 6;
+                break;
+        }
+        return Math.round(value) > workTime ? PageState.Danger:'';
+    },
+    
+    getClassId: function (id) {
+        this.setState({classId: id});
+    },
+
+    handleChange: function (time, id, event) {
+        var sum = this.calcPeopleValue(id, time, event.target.value.trim(''));
+        var columnTime = this.calcTimeValue(id, time, event.target.value.trim(''));
+        var inputTotalTime = this.calcInputTotalTime(time, sum, columnTime);
+        var pageInputState = this.judgeTheTimeValue(id, time, event.target.value);
+        if (pageInputState !== ''){
+            this.setState({pageInputState: pageInputState, inputTotalTime: '', pageInputStateDescripe:'时间输入有误，上午不超过12个小时，下午不超过6个小时，晚上不超过6个小时。'});
+            return;
+        }
+        var testState = this.state.inIterms.map(function (child) {
+            if (child.get('id') == id){
+                return child.set(time, event.target.value);
+            }
+            else if ((child.get("id") === 6) ){
+                return child.set(time, sum);
+            }
+            return child;
+        })
+        this.setState({inIterms: testState, inputTotalTime: inputTotalTime, pageInputState:pageInputState,pageInputStateDescripe:''});
+    },
+
+    handPageState: function(flage, msg){
+      this.setState({pageInputState:flage, pageInputStateDescripe: msg});
+    },
+
+    //, "UserID": getUserId, "ClassID":this.state.classId
+    storeDocToDataBase: function (){
+        var _self = this;
+        if (this.judgeTheCommit()){
+            $.ajax({
+                url:globeInsertManpower,
+                type: 'POST',
+                data: { "TimePeopleNumber": JSON.stringify(this.state.inIterms.toString()), "userid": getUserId, "groupid": this.state.classId},
+                dataType: "json",
+                success: function (data) {
+                    _self.handPageState(PageState.Success, '输入录入成功');
+                    //录入成功之后的操作
+                },
+                error: function (data) {
+                    
+                }
+
+            });
+        }
+        // this.setState({pageInputState: '',pageInputStateDescripe:'', inputTotalTime: ''})
+    },
+
+    judgeTheCommit: function () {
+        if (this.state.classId == ''){
+            this.handPageState(PageState.Danger, "组未选择，请选择组");
+            return false;
+        }
+        if (this.state.inputTotalTime == '') {
+            this.handPageState(PageState.Danger, "请检查人数，以及工作小时输入是否完整");
+            return false;
+        }
+        if (this.state.commitState == PageState.ContinueCommit){
+            this.handPageState(PageState.ContinueCommit, "请不要重复提交");
+            return false;
+        }
+        this.setState({commitState: PageState.ContinueCommit});
+        return true;
+
+    },
+
+    render: function () {
+        var rows = [];
+        for(var i = 0;i<this.state.inIterms.size;i++){
+            var row = this.state.inIterms.get(i);
+            if (i ==0){
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td>
+                            <input type='text'  onChange={this.handleChange.bind(this,'morning', row.get('id'))} />
+                            </td>
+                        <td>
+                            <input type="text" defaultValue={row.get("afternoon")} onChange={this.handleChange.bind(this,'afternoon', row.get('id'))}/></td>
+                        <td>
+                                <input type="text"  defaultValue={row.get("night")} onChange={this.handleChange.bind(this, 'night', row.get('id'))} /></td>
+                    </tr>);
+            }
+            if (i !== 6){
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td>
+                            <input type="text"   valueAsDate ={row.get("morning")} onChange={this.handleChange.bind(this, 'morning', row.get('id'))} />
+                        </td>
+                        <td>
+                            <input type="text" defaultValue={row.get("afternoon")} onChange={this.handleChange.bind(this, 'afternoon', row.get('id'))}  />
+                        </td>
+                        <td>
+                            <input type="text" defaultValue={row.get("night")} onChange={this.handleChange.bind(this, 'night', row.get('id'))}/>
+                        </td>
+                    </tr>);
+            }
+            else{
+                rows.push(
+                    <tr key={row.get('id')}>
+                        <td>{row.get("name")}</td>
+                        <td> <lable htmlFor="mapBug">{row.get('morning')}</lable></td>
+                        <td><lable htmlFor="mapBug">{row.get('afternoon')}</lable></td>
+                        <td><lable htmlFor="mapBug">{row.get('night')}</lable></td>
+                    </tr>);
+            }
+
+        }
+        return (<div className="grid">
+            <div className="row cells10">
+                <SelectBoxList showPageState={this.handPageState.bind(this)} getClassId={this.getClassId.bind(this)}  />
+            </div>
+            <ShowPageState flage = {this.state.pageInputState} msg={this.state.pageInputStateDescripe} />
+            <table className="table striped hovered cell-hovered border bordered"
+                   id="main_table_demo">
+                <thead>
+                <tr>
+                    <th>出勤</th>
+                    <th>上午</th>
+                    <th>下午</th>
+                    <th>晚上</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rows}
+
+                </tbody>
+            </table>
+            <label htmlFor="inputTime"><h4>投入总工时/ 小时:  {this.state.inputTotalTime}</h4></label>
+            <FooterForm storeFunc={this.storeDocToDataBase}></FooterForm>
+        </div>);
+    }
+});

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VSO</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/metro.css">
+    <link rel="stylesheet" href="assets/css/metro-icons.css">
+    <link rel="stylesheet" href="assets/css/metro-responsive.min.css">
+    <link rel="stylesheet" href="assets/css/metro-rtl.min.css">
+    <link rel="stylesheet" href="assets/css/metro-schemes.min.css">
+    <script src="assets/js/md5.min.js"></script>
+    <script src="assets/js/json2.js"></script>
+    <script src="assets/js/jquery-2.2.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js" defer="defer"></script>
+    <script src="assets/js/metro.min.js"></script>
+    <script src="assets/js/react-with-addons.min.js"></script>
+    <script src="assets/js/JSXTransformer.js"></script>
+    <script src="assets/js/immutable.min.js" defer="defer"></script>
+
+</head>
+<body>
+<script type="text/jsx" src="assets/js/Login.jsx"></script>
+<script type="text/jsx" src="assets/js/CommonFunc.jsx"></script>
+<script type="text/jsx" src="assets/js/GlobeVar.jsx"></script>
+<script type="text/jsx" src="assets/js/KeyPad.jsx"></script>
+<script type="text/jsx" src="assets/js/DailyReportForm.jsx"></script>
+<script type="text/jsx" src="assets/js/LCDLook.jsx"></script>
+<script type="text/jsx" src="assets/js/BugIntoForm.jsx"></script>
+<script type="text/jsx" src="assets/js/NavigatorBar.jsx"></script>
+<script type="text/jsx" src="assets/js/ChildForm.jsx"></script>
+<script type="text/jsx" src="assets/js/FQCInputForm.jsx"></script>
+<script type="text/jsx" src="assets/js/PQCInputForm.jsx"></script>
+<script type="text/jsx" src="assets/js/Work_HoursForm.jsx"></script>
+<script type="text/jsx" src="assets/js/ErrorTimeInputForm.jsx"></script>
+<script type="text/jsx" src="assets/js/InHoursForm.jsx"></script>
+<script type="text/jsx" src="assets/js/FooterForm.jsx"></script>
+<script type="text/jsx" src="assets/js/MainForm.jsx"></script>
+<noscript>
+    <p>本页面需要JavaScript支持
+</noscript>
+</body>
+</html>

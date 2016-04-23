@@ -1,0 +1,42 @@
+/*
+用户信息修改
+ */
+
+var UserInfo = React.createClass({
+    getUserInfo: function () {
+        $.ajax({
+           url:'',
+            type:"get",
+            dataType: 'json',
+            data: {"userid": getUserId}, 
+            timeout: 8000,
+            success: function (data) {
+                var jsonData
+            }
+
+        });
+    },
+    render:function () {
+        return (
+            <div className="row" >
+                <div className="col-xs-5 col-md-offset-3">
+                    <table className="table table-striped">
+                        <caption  style={{textAlign:'center', fontSize: "150%"}}>用户基本信息</caption>
+                        <thead></thead>
+                        <tbody>
+                        <tr style={{textAlign:'center', fontSize: "120%"}}>
+                            <td >Tanmay</td>
+                            <td>Bangalore</td>
+                        </tr>
+                        <tr style={{textAlign:'center', fontSize: "120%"}}>
+                            <td>Sachin</td>
+                            <td>Mumbai</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        )
+    },
+});

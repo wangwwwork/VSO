@@ -1,0 +1,9 @@
+/*
+用于存储获取后台数据的地址变量
+ */
+
+//获取制的地址
+var globeSelectLineUrl = 'http://10.101.3.189:8080/JAVSO/productline/selectall_line.do';
+
+//g根据制id获取组的地址
+var globeSelectClassUrl = 'http://10.101.3.189:8080/JAVSO/productgroup/selectall_group.do';
